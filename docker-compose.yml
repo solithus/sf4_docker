@@ -2,41 +2,41 @@ version: '3'
 services:
     apache:
         build: .docker/apache
-        container_name: scoring_apache
+        container_name: sf4_apache
         ports:
           - 80:80
         volumes:
           - .docker/config/vhosts:/etc/apache2/sites-enabled
-          - .:/var/www/html/app-scoring
+          - .:/var/www/html/app-sf4
         depends_on:
           - php
 
     mysql:
         image: mysql
         command: "--default-authentication-plugin=mysql_native_password"
-        container_name: scoring_mysql
+        container_name: sf4_mysql
         volumes:
             - .docker/data/db:/var/lib/mysql
         environment:
             MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: epicscoring
-            MYSQL_USER: scoring
-            MYSQL_PASSWORD: scoring
+            MYSQL_DATABASE: app_sf4
+            MYSQL_USER: sf4
+            MYSQL_PASSWORD: sf4
         build: .docker/mysql
     php:
         build: .docker/php
-        container_name: scoring_php
+        container_name: sf4_php
         volumes:
-          - .:/var/www/html/app-scoring
+          - .:/var/www/html/app-sf4
         environment:
-          - maildev_host=scoring_maildev
+          - maildev_host=sf4_maildev
         depends_on:
           - maildev
           - mysql
 
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
-        container_name: scoring_phpmyadmin
+        container_name: sf4_phpmyadmin
         environment:
           PMA_HOST: mysql
           PMA_PORT: 3306
@@ -47,6 +47,6 @@ services:
 
     maildev:
         image: djfarrelly/maildev
-        container_name: scoring_maildev
+        container_name: sf4_maildev
         ports:
           - 8001:80
